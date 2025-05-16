@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MagicalNFT</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Orbitron', sans-serif;
+      background: url('background.png') no-repeat center center fixed;
+      background-size: cover;
+      color: #e0ffff;
+      overflow-x: hidden;
+    }
+
+    /* Navbar */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      background-color: rgba(0, 0, 0, 0.8);
+      border-bottom: 2px solid #00ffff;
+    }
+
+    .navbar .site-title {
+      color: #ff6347;
+      font-size: 2rem;
+      font-weight: bold;
+      animation: fireGlow 1.5s infinite alternate;
+    }
+
+    @keyframes fireGlow {
+      0% { text-shadow: 0 0 10px #ff4500; }
+      100% { text-shadow: 0 0 20px #ffa500; }
+    }
+
+    .navbar .buttons {
+      display: flex;
+      gap: 20px;
+    }
+
+    .navbar button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 30px;
+      background-color: #00ffff22;
+      color: #00ffff;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .navbar button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px #00ffffaa;
+    }
+
+    /* Connect Wallet Dropdown */
+    .connect-wallet {
+      position: relative;
+      display: inline-block;
+    }
+
+    .connect-wallet button {
+      padding: 10px 20px;
+      background-color: #00ffff;
+      color: #fff;
+      border-radius: 25px;
+      cursor: pointer;
+    }
+
+    .connect-wallet button:hover {
+      transform: scale(1.05);
+    }
+
+    .wallet-options {
+      display: none;
+      position: absolute;
+      top: 40px;
+      left: 0;
+      background-color: #00ffff;
+      color: #fff;
+      padding: 10px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px #00ffff;
+    }
+
+    .connect-wallet:hover .wallet-options {
+      display: block;
+    }
+
+    .wallet-option {
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    .wallet-option:hover {
+      background-color: #00ffff44;
+    }
+
+    .connected {
+      background-color: #00ff0044;
+    }
+
+    /* Main Header */
+    header {
+      text-align: center;
+      padding: 60px 20px 40px;
+      margin-top: 100px; /* to ensure the header isn't under the navbar */
+    }
+
+    h1 {
+      font-size: 3rem;
+      color: #00ffff;
+      animation: fadeIn 3s ease-in-out forwards;
+      opacity: 0;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+
+    p.subtext {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      color: #c0fefe;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      margin-top: 40px;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 15px 25px;
+      border: none;
+      border-radius: 30px;
+      background-color: #00ffff22;
+      color: #00ffff;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 0 15px #00ffff88;
+    }
+
+    .btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px #00ffffaa;
+    }
+
+    .fire-effect {
+      animation: firePulse 1.2s infinite alternate;
+    }
+
+    @keyframes firePulse {
+      0% { box-shadow: 0 0 15px #ff4500; }
+      100% { box-shadow: 0 0 30px #ff6347; }
+    }
+
+    section {
+      padding: 60px 20px;
+      text-align: center;
+    }
+
+    .how-it-works h2 {
+      font-size: 2rem;
+      margin-bottom: 40px;
+      border-bottom: 2px solid #00ffff55;
+      display: inline-block;
+      padding-bottom: 10px;
+    }
+
+    .step {
+      margin: 20px auto;
+      background-color: #00ffff11;
+      border-radius: 20px;
+      padding: 20px;
+      width: 90%;
+      max-width: 500px;
+      font-size: 1rem;
+      color: #e0ffff;
+      border: 1px solid #00ffff44;
+      box-shadow: 0 0 10px #00ffff33;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .step-description {
+      margin-top: 10px;
+      display: none;
+      animation: typewriter 2s steps(40, end) forwards;
+      white-space: nowrap;
+      overflow: hidden;
+      border-top: 1px solid #00ffff22;
+      padding-top: 10px;
+    }
+
+    @keyframes typewriter {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+
+    .blockchains {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 30px;
+      margin-top: 40px;
+      padding: 0 40px;
+      text-align: center;
+    }
+
+    .blockchain {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .blockchain img {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+      transition: transform 0.3s ease, filter 0.3s ease;
+      filter: drop-shadow(0 0 8px #00ffff88);
+    }
+
+    .blockchain img:hover {
+      transform: scale(1.1);
+      filter: drop-shadow(0 0 16px #00ffff);
+    }
+
+    .chain-name {
+      font-size: 0.9rem;
+      color: #c0ffff;
+      white-space: nowrap;
+      overflow: hidden;
+      animation: typewriter 3s steps(40, end) forwards;
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2rem;
+      }
+
+      p.subtext {
+        font-size: 1rem;
+      }
+
+      .btn {
+        font-size: 0.9rem;
+      }
+    }
+
+    footer {
+      padding: 20px;
+      text-align: center;
+      background-color: transparent;
+      color: #fff;
+      font-size: 1rem;
+      border-top: 2px solid #00ffff;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="site-title">🔥 MagicalNFT 🔥</div>
+    <div class="buttons">
+      <a href="index.html"><button>Home</button></a>
+      <a href="magicpad.html"><button>MagicPad</button></a>
+      <a href="mychainverse.html"><button>My ChainVerse</button></a>
+      <div class="connect-wallet">
+        <button id="connectBtn" onclick="connectWallet()">Connect Wallet</button>
+        <div class="wallet-options">
+          <div class="wallet-option" onclick="selectWallet('Phantom')">Phantom</div>
+          <div class="wallet-option" onclick="selectWallet('MetaMask')">MetaMask</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Header -->
+  <header>
+    <h1>NFT Without Borders</h1>
+    <p class="subtext">Mint and deploy NFTs across blockchains in one click using LayerZero or similar omnichain tech.</p>
+    <div class="buttons">
+      <button class="btn fire-effect">🔥 Ignite the Mint</button>
+      <button class="btn">🌌 Go to My ChainVerse</button>
+    </div>
+  </header>
+
+  <!-- How It Works Section -->
+  <section id="home" class="active">
+    <h2>How It Works</h2>
+    <div class="step" onclick="toggleStep(this)">
+      1️⃣ <strong>Kickstart on Solana</strong>
+      <div class="step-description">Begin your NFT minting journey on Solana, known for speed and low fees.</div>
+    </div>
+
+    <div class="step" onclick="toggleStep(this)">
+      2️⃣ <strong>Set Chain Preferences</strong>
+      <div class="step-description">Choose which chains to deploy to – ETH, Base, Polygon, TON, and more.</div>
+    </div>
+
+    <div class="step" onclick="toggleStep(this)">
+      3️⃣ <strong>Go Multichain</strong>
+      <div class="step-description">Launch your NFT into the ChainVerse, made seamless by omnichain infrastructure.</div>
+    </div>
+  </section>
+
+  <!-- Supported Blockchains Section -->
+  <section class="supported" id="supported">
+    <h2>Supported Blockchains</h2>
+    <div class="blockchains">
+      <div class="blockchain">
+        <img src="sol.png" alt="Solana" />
+        <div class="chain-name">Solana</div>
+      </div>
+      <div class="blockchain">
+        <img src="eth.png" alt="Ethereum" />
+        <div class="chain-name">Ethereum</div>
+      </div>
+      <div class="blockchain">
+        <img src="base.png" alt="Base" />
+        <div class="chain-name">Base</div>
+      </div>
+      <div class="blockchain">
+        <img src="poly.png" alt="Polygon" />
+        <div class="chain-name">Polygon</div>
+      </div>
+      <div class="blockchain">
+        <img src="ton.png" alt="TON" />
+        <div class="chain-name">TON</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    © 2025 MagicalNFT Launchpad. All rights reserved. | Powered by LayerZero V2.
+    <br />
+    <a href="#">Terms</a> | <a href="#">Privacy</a> | <a href="#">Support</a>
+  </footer>
+
+  <script>
+    function toggleStep(stepElement) {
+      const description = stepElement.querySelector('.step-description');
+      if (description.style.display === 'block') {
+        description.style.display = 'none';
+      } else {
+        description.style.display = 'block';
+        description.style.animation = 'typewriter 2s steps(40, end) forwards';
+      }
+    }
+
+    // Function to simulate wallet connection
+    function connectWallet() {
+      const connectBtn = document.getElementById('connectBtn');
+      connectBtn.innerText = 'Connected';
+      connectBtn.disabled = true;
+      const randomAddress = 'G8ne....4n'; // Replace with actual address logic
+      connectBtn.innerText = randomAddress;
+    }
+
+    // Select wallet (Phantom or MetaMask)
+    function selectWallet(wallet) {
+      const connectBtn = document.getElementById('connectBtn');
+      connectBtn.innerText = `Connected (${wallet})`;
+      document.querySelector('.wallet-options').style.display = 'none';
+    }
+  </script>
+</body>
+</html>

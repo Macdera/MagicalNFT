@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My ChainVerse</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Orbitron', sans-serif;
+      background: url('background.png') no-repeat center center fixed;
+      background-size: cover;
+      color: #e0ffff;
+      overflow-x: hidden;
+    }
+
+    /* Navbar */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      background-color: rgba(0, 0, 0, 0.8);
+      border-bottom: 2px solid #00ffff;
+    }
+
+    .navbar .site-title {
+      color: #ff6347;
+      font-size: 2rem;
+      font-weight: bold;
+      animation: fireGlow 1.5s infinite alternate;
+    }
+
+    @keyframes fireGlow {
+      0% { text-shadow: 0 0 10px #ff4500; }
+      100% { text-shadow: 0 0 20px #ffa500; }
+    }
+
+    .navbar .buttons {
+      display: flex;
+      gap: 20px;
+    }
+
+    .navbar button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 30px;
+      background-color: #00ffff22;
+      color: #00ffff;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .navbar button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px #00ffffaa;
+    }
+
+    /* Connect Wallet Dropdown */
+    .connect-wallet {
+      position: relative;
+      display: inline-block;
+    }
+
+    .connect-wallet button {
+      padding: 10px 20px;
+      background-color: #00ffff;
+      color: #fff;
+      border-radius: 25px;
+      cursor: pointer;
+    }
+
+    .connect-wallet button:hover {
+      transform: scale(1.05);
+    }
+
+    .wallet-options {
+      display: none;
+      position: absolute;
+      top: 40px;
+      left: 0;
+      background-color: #00ffff;
+      color: #fff;
+      padding: 10px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px #00ffff;
+    }
+
+    .connect-wallet:hover .wallet-options {
+      display: block;
+    }
+
+    .wallet-option {
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    .wallet-option:hover {
+      background-color: #00ffff44;
+    }
+
+    .connected {
+      background-color: #00ff0044;
+    }
+
+    /* Header */
+    header {
+      text-align: center;
+      padding: 60px 20px;
+      margin-top: 80px;
+    }
+
+    h1 {
+      font-size: 3rem;
+      color: #00ffff;
+    }
+
+    p.subtext {
+      font-size: 1.2rem;
+      color: #c0fefe;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 20px;
+    }
+
+    /* Filters Section */
+    .filters {
+      display: flex;
+      justify-content: center;
+      margin-top: 40px;
+      gap: 20px;
+    }
+
+    .filters button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 30px;
+      background-color: #00ffff22;
+      color: #00ffff;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .filters button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px #00ffffaa;
+    }
+
+    .filters input {
+      padding: 10px;
+      border-radius: 30px;
+      font-size: 1rem;
+    }
+
+    /* NFT Display */
+    .nft-display {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 30px;
+      margin-top: 40px;
+      padding: 0 40px;
+    }
+
+    .nft-card {
+      background-color: #00ffff11;
+      border-radius: 20px;
+      padding: 20px;
+      text-align: center;
+      font-size: 1rem;
+      color: #e0ffff;
+      box-shadow: 0 0 10px #00ffff33;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .nft-card img {
+      width: 100%;
+      height: 150px;
+      object-fit: contain;
+      border-radius: 10px;
+    }
+
+    .nft-card .view-details {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #00ffff;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 30px;
+      cursor: pointer;
+      display: none;
+    }
+
+    .nft-card:hover .view-details {
+      display: block;
+    }
+
+    .nft-details {
+      display: none;
+      background-color: #00ffff33;
+      padding: 20px;
+      margin-top: 20px;
+      border-radius: 20px;
+      text-align: center;
+    }
+
+    .nft-details label {
+      display: block;
+      margin: 10px 0;
+    }
+
+    .nft-details select,
+    .nft-details input {
+      padding: 10px;
+      border-radius: 10px;
+      margin-top: 10px;
+    }
+
+    .transfer-button {
+      background-color: #ff6347;
+      color: white;
+      font-size: 1rem;
+      padding: 10px 20px;
+      border-radius: 30px;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+
+    .transfer-button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px #ff6347;
+    }
+
+    .loading-animation {
+      display: none;
+      font-size: 2rem;
+      margin-top: 20px;
+      color: #ff6347;
+    }
+
+    .celebration {
+      display: none;
+      font-size: 2rem;
+      color: #00ff00;
+    }
+
+    .celebration img {
+      width: 100px;
+      height: 100px;
+      margin-top: 20px;
+    }
+
+    /* Footer */
+    footer {
+      padding: 20px;
+      text-align: center;
+      background-color: transparent;
+      color: #fff;
+      font-size: 1rem;
+      border-top: 2px solid #00ffff;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="site-title">🔥 MagicalNFT 🔥</div>
+    <div class="buttons">
+      <a href="index.html"><button>Home</button></a>
+      <a href="magicpad.html"><button>MagicPad</button></a>
+      <a href="chainverse.html"><button>My ChainVerse</button></a>
+      <div class="connect-wallet">
+        <button id="connectBtn" onclick="connectWallet()">Connect Wallet</button>
+        <div class="wallet-options">
+          <div class="wallet-option" onclick="selectWallet('Phantom')">Phantom</div>
+          <div class="wallet-option" onclick="selectWallet('MetaMask')">MetaMask</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <header>
+    <h1>My NFTs</h1>
+    <p class="subtext">View and manage your NFTs across multiple blockchains.</p>
+  </header>
+
+  <!-- Filters Section -->
+  <div class="filters">
+    <button onclick="filterNFTs('all')">All</button>
+    <button onclick="filterNFTs('created')">Created</button>
+    <button onclick="filterNFTs('collected')">Collected</button>
+    <input type="text" id="search" placeholder="Search NFTs..." oninput="searchNFTs()" />
+    <button onclick="selectChain()">All Chains</button>
+  </div>
+
+  <!-- NFT Display -->
+  <div class="nft-display">
+    <!-- Example NFT Cards -->
+    <div class="nft-card" id="nft1" data-type="created">
+      <img src="badlands.png" alt="Into the Badlands" />
+      <h3>Into the Badlands #3409</h3>
+      <p>A warrior with magical talents</p>
+      <div class="view-details" onclick="viewNFTDetails('nft1')">View Details</div>
+    </div>
+
+    <div class="nft-card" id="nft2" data-type="collected">
+      <img src="werewolves.png" alt="Werewolves and Witches" />
+      <h3>Werewolves and Witches #196</h3>
+      <p>The supernatural blockchain</p>
+      <div class="view-details" onclick="viewNFTDetails('nft2')">View Details</div>
+    </div>
+
+    <div class="nft-card" id="nft3" data-type="created">
+      <img src="got.png" alt="Game of Thrones" />
+      <h3>Game of Thrones #8</h3>
+      <p>The fight for Westeros</p>
+      <div class="view-details" onclick="viewNFTDetails('nft3')">View Details</div>
+    </div>
+
+    <div class="nft-card" id="nft4" data-type="collected">
+      <img src="merlin.png" alt="Kilgorrah" />
+      <h3>Kilgorrah #23</h3>
+      <p>Merlin's best ally</p>
+      <div class="view-details" onclick="viewNFTDetails('nft4')">View Details</div>
+    </div>
+
+    <div class="nft-card" id="nft5" data-type="collected">
+      <img src="toothless.png" alt="Toothless" />
+      <h3>Toothless #447</h3>
+      <p>Dragonking of Berg</p>
+      <div class="view-details" onclick="viewNFTDetails('nft5')">View Details</div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    © 2025 MagicalNFT Launchpad. All rights reserved. | Powered by LayerZero V2.
+    <br />
+    <a href="#">Terms</a> | <a href="#">Privacy</a> | <a href="#">Support</a>
+  </footer>
+
+  <script>
+    let selectedNFT = null;
+
+    // Function to filter NFTs by category (All, Created, Collected)
+    function filterNFTs(type) {
+      const nftCards = document.querySelectorAll('.nft-card');
+      nftCards.forEach(card => {
+        const cardType = card.getAttribute('data-type');
+        if (type === 'all' || cardType === type) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    // Function to search NFTs by name
+    function searchNFTs() {
+      const query = document.getElementById('search').value.toLowerCase();
+      const nftCards = document.querySelectorAll('.nft-card');
+      nftCards.forEach(card => {
+        const title = card.querySelector('h3').textContent.toLowerCase();
+        if (title.includes(query)) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    // Show details for a specific NFT
+    function viewNFTDetails(nftId) {
+      selectedNFT = document.getElementById(nftId);
+      const nftDetails = selectedNFT.querySelector('.nft-details');
+      if (!nftDetails) {
+        const detailsDiv = document.createElement('div');
+        detailsDiv.classList.add('nft-details');
+        detailsDiv.innerHTML = `
+          <label for="source-chain">Source Chain: Solana</label>
+          <select id="destination-chain">
+            <option value="solana">Solana</option>
+            <option value="evm">EVM</option>
+            <option value="base">Base</option>
+            <option value="ton">TON</option>
+            <option value="polygon">Polygon</option>
+          </select>
+          <label for="gas-fee">Estimated Gas Fee:</label>
+          <input type="text" id="gas-fee" value="~0.001 SOL" disabled />
+          <button class="transfer-button" onclick="transferNFT()">Transfer NFT</button>
+        `;
+        selectedNFT.appendChild(detailsDiv);
+      }
+      nftDetails.style.display = 'block';
+    }
+
+    // Transfer NFT logic
+    function transferNFT() {
+      const loadingAnimation = document.createElement('div');
+      loadingAnimation.classList.add('loading-animation');
+      loadingAnimation.textContent = 'Processing...';
+
+      selectedNFT.appendChild(loadingAnimation);
+
+      setTimeout(() => {
+        loadingAnimation.style.display = 'none';
+        const celebrationDiv = document.createElement('div');
+        celebrationDiv.classList.add('celebration');
+        celebrationDiv.innerHTML = `
+          <p>🎉 NFT Transferred 🎉</p>
+          <img src="celebration-image.png" alt="Celebration" />
+        `;
+        selectedNFT.appendChild(celebrationDiv);
+        selectedNFT.querySelector('.nft-details').style.display = 'none'; // Collapse details
+      }, 2000);
+    }
+
+    // Function to simulate selecting chain (this is just a placeholder)
+    function selectChain() {
+      alert("Selecting chain..."); // Placeholder for chain selection
+    }
+  </script>
+</body>
+</html>

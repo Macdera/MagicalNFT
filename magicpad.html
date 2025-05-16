@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NFT Magicpad</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Orbitron', sans-serif;
+      background: url('background.png') no-repeat center center fixed;
+      background-size: cover;
+      color: #e0ffff;
+      overflow-x: hidden;
+    }
+
+    /* Navbar */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      background-color: rgba(0, 0, 0, 0.8);
+      border-bottom: 2px solid #00ffff;
+    }
+
+    .navbar .site-title {
+      color: #ff6347;
+      font-size: 2rem;
+      font-weight: bold;
+      animation: fireGlow 1.5s infinite alternate;
+    }
+
+    @keyframes fireGlow {
+      0% { text-shadow: 0 0 10px #ff4500; }
+      100% { text-shadow: 0 0 20px #ffa500; }
+    }
+
+    .navbar .buttons {
+      display: flex;
+      gap: 20px;
+    }
+
+    .navbar button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 30px;
+      background-color: #00ffff22;
+      color: #00ffff;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .navbar button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px #00ffffaa;
+    }
+
+    /* Connect Wallet Dropdown */
+    .connect-wallet {
+      position: relative;
+      display: inline-block;
+    }
+
+    .connect-wallet button {
+      padding: 10px 20px;
+      background-color: #00ffff;
+      color: #fff;
+      border-radius: 25px;
+      cursor: pointer;
+    }
+
+    .connect-wallet button:hover {
+      transform: scale(1.05);
+    }
+
+    .wallet-options {
+      display: none;
+      position: absolute;
+      top: 40px;
+      left: 0;
+      background-color: #00ffff;
+      color: #fff;
+      padding: 10px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px #00ffff;
+    }
+
+    .connect-wallet:hover .wallet-options {
+      display: block;
+    }
+
+    .wallet-option {
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    .wallet-option:hover {
+      background-color: #00ffff44;
+    }
+
+    .connected {
+      background-color: #00ff0044;
+    }
+
+    /* Header */
+    header {
+      text-align: center;
+      padding: 60px 20px;
+      margin-top: 80px;
+    }
+
+    h1 {
+      font-size: 3rem;
+      color: #00ffff;
+      animation: fadeIn 3s ease-in-out forwards;
+      opacity: 0;
+    }
+
+    p.subtext {
+      font-size: 1.2rem;
+      color: #c0fefe;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 20px;
+      animation: magicalText 3s infinite alternate;
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    @keyframes magicalText {
+      0% { text-shadow: 0 0 10px #ff6347, 0 0 20px #ff6347; }
+      100% { text-shadow: 0 0 30px #00ffff, 0 0 40px #00ffff; }
+    }
+
+    /* Steps */
+    .steps {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 40px;
+      padding: 20px;
+    }
+
+    .step {
+      padding: 20px;
+      border-radius: 20px;
+      background-color: #00ffff11;
+      color: #e0ffff;
+      font-size: 1.2rem;
+      border: 1px solid #00ffff44;
+      box-shadow: 0 0 10px #00ffff33;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .step.active {
+      background-color: #00ffff33;
+    }
+
+    .step:hover {
+      background-color: #00ffff22;
+    }
+
+    /* File Upload */
+    .upload-section {
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    .upload-section label {
+      font-size: 1.2rem;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .upload-section input[type="file"] {
+      display: none;
+    }
+
+    .upload-button {
+      padding: 12px 24px;
+      background-color: #00ffff;
+      color: white;
+      font-size: 1rem;
+      border-radius: 30px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .upload-button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px #00ffffaa;
+    }
+
+    /* Transaction Fees */
+    .fees-section {
+      margin-top: 40px;
+    }
+
+    .fees-text {
+      font-size: 1rem;
+      color: #e0ffff;
+    }
+
+    .continue-button {
+      margin-top: 20px;
+      padding: 12px 24px;
+      background-color: #ff6347;
+      color: white;
+      font-size: 1rem;
+      border-radius: 30px;
+      cursor: pointer;
+    }
+
+    /* Conjure Section */
+    .conjure-section {
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    .loading-animation {
+      display: none;
+      font-size: 2rem;
+      margin-top: 20px;
+      color: #ff6347;
+    }
+
+    .celebration {
+      display: none;
+      font-size: 2rem;
+      color: #00ff00;
+    }
+
+    .celebration img {
+      width: 100px;
+      height: 100px;
+      margin-top: 20px;
+    }
+
+    .view-buttons {
+      margin-top: 20px;
+    }
+
+    .view-buttons button {
+      padding: 10px 20px;
+      background-color: #00ffff;
+      color: white;
+      font-size: 1rem;
+      border-radius: 30px;
+      margin: 10px;
+    }
+
+    /* Footer */
+    footer {
+      padding: 20px;
+      text-align: center;
+      background-color: transparent;
+      color: #fff;
+      font-size: 1rem;
+      border-top: 2px solid #00ffff;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="site-title">🔥 MagicalNFT 🔥</div>
+    <div class="buttons">
+      <a href="index.html"><button>Home</button></a>
+      <a href="magicpad.html"><button>MagicPad</button></a>
+      <a href="chainverse.html"><button>My ChainVerse</button></a>
+      <div class="connect-wallet">
+        <button id="connectBtn" onclick="connectWallet()">Connect Wallet</button>
+        <div class="wallet-options">
+          <div class="wallet-option" onclick="selectWallet('Phantom')">Phantom</div>
+          <div class="wallet-option" onclick="selectWallet('MetaMask')">MetaMask</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <header>
+    <h1>NFT Magicpad</h1>
+    <p class="subtext">Conjure and deploy your NFT across multiple blockchains.</p>
+  </header>
+
+  <div class="steps">
+    <div class="step active" onclick="showStep('upload')">Upload</div>
+    <div class="step" onclick="showStep('details')">Details</div>
+    <div class="step" onclick="showStep('chains')">Chains</div>
+    <div class="step" onclick="showStep('conjure')">Conjure</div>
+  </div>
+
+  <!-- Upload Section -->
+  <div id="upload" class="upload-section">
+    <label for="file-upload">Upload Image</label>
+    <input type="file" id="file-upload" onchange="handleFileSelect(event)" />
+    <button class="upload-button" onclick="uploadImage()">Select File</button>
+    <p class="fees-text">Supported formats: JPG, PNG, GIF, WEBP. Max size: 5MB.</p>
+  </div>
+
+  <!-- Details Section -->
+  <div id="details" style="display:none">
+    <label for="name">NFT Name</label>
+    <input type="text" id="name" placeholder="Enter NFT Name" />
+    <label for="description">Description</label>
+    <textarea id="description" placeholder="Enter NFT Description"></textarea>
+    <button class="continue-button" onclick="showStep('chains')">Continue</button>
+  </div>
+
+  <!-- Chains Section -->
+  <div id="chains" style="display:none">
+    <h3>Pick Target Chains</h3>
+    <p>Choose blockchains where you want your NFT to be available.</p>
+    <div>
+      <label>
+        <input type="checkbox" checked disabled /> Solana
+      </label>
+      <label>
+        <input type="checkbox" onchange="updateTransactionFees()" /> EVM
+      </label>
+      <label>
+        <input type="checkbox" onchange="updateTransactionFees()" /> Base
+      </label>
+      <label>
+        <input type="checkbox" onchange="updateTransactionFees()" /> TON
+      </label>
+      <label>
+        <input type="checkbox" onchange="updateTransactionFees()" /> Polygon
+      </label>
+    </div>
+    <p class="fees-text">Transaction Fees: <span id="transaction-fees">0.001 SOL</span> equivalent</p>
+    <button class="continue-button" onclick="showStep('conjure')">Conjure on Cross-Chain</button>
+  </div>
+
+  <!-- Conjure Section -->
+  <div id="conjure" style="display:none" class="conjure-section">
+    <div class="loading-animation">Minting...</div>
+    <div class="celebration">
+      <p>🎉 NFT Minted 🎉</p>
+      <img src="celebration-image.png" alt="Celebration" />
+    </div>
+    <div class="view-buttons">
+      <button onclick="window.location.href='https://solscan.io/'">View in Solscan</button>
+      <button onclick="window.location.href='#'">View in My Collection</button>
+    </div>
+  </div>
+
+  <footer>
+    © 2025 MagicalNFT Launchpad. All rights reserved. | Powered by LayerZero V2.
+    <br />
+    <a href="#">Terms</a> | <a href="#">Privacy</a> | <a href="#">Support</a>
+  </footer>
+
+  <script>
+    // Step navigation
+    function showStep(step) {
+      const steps = ['upload', 'details', 'chains', 'conjure'];
+      steps.forEach(function(stepName) {
+        document.getElementById(stepName).style.display = 'none';
+      });
+      document.getElementById(step).style.display = 'block';
+
+      const stepElements = document.querySelectorAll('.step');
+      stepElements.forEach(function(element) {
+        element.classList.remove('active');
+      });
+      document.querySelector('.step.' + step).classList.add('active');
+    }
+
+    function handleFileSelect(event) {
+      // Handle file selection logic here
+    }
+
+    function uploadImage() {
+      const fileInput = document.getElementById('file-upload');
+      if (fileInput.files.length > 0) {
+        showStep('details');
+      } else {
+        alert('Please select an image to upload.');
+      }
+    }
+
+    function updateTransactionFees() {
+      let fee = 0.001;
+      const checkboxes = document.querySelectorAll('#chains input[type="checkbox"]:checked');
+      fee += (checkboxes.length - 1) * 0.002;
+      document.getElementById('transaction-fees').innerText = fee.toFixed(3) + ' SOL';
+    }
+  </script>
+</body>
+</html>
+
